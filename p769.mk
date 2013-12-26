@@ -128,8 +128,8 @@ PRODUCT_PACKAGES += \
 #    Nfc \
 #    Tag
 
-FRAMEWORKS_BASE_SUBDIRS += \
-	$(addsuffix /java, omapmmlib )
+#FRAMEWORKS_BASE_SUBDIRS += \
+#	$(addsuffix /java, omapmmlib )
 
 #FRAMEWORKS_BASE_SUBDIRS += \
 #	../../$(LOCAL_PATH)/framework-addons/
@@ -142,8 +142,8 @@ PRODUCT_PACKAGES += \
     libstagefrighthw
 
 #copy firmware
-PRODUCT_COPY_FILES += \
-  system/bluetooth/data/main.conf:system/etc/bluetooth/main.conf
+#PRODUCT_COPY_FILES += \
+#  system/bluetooth/data/main.conf:system/etc/bluetooth/main.conf
 
 # Charger mode
 PRODUCT_PACKAGES += \
