@@ -2,7 +2,10 @@ import init.p769.usb.rc
 
 on early-init
 # create mountpoints
+    chmod 0701 /mnt/media_rw
+    chown root root /mnt/media_rw
     mkdir /storage 0050 system sdcard_r
+    # Set permissions for persist partition
     mkdir /persist 0500 system system
     chown system system /sys/module/lge_handle_panic/parameters/hidden_reset_enable
     chmod 660 /sys/module/lge_handle_panic/parameters/hidden_reset_enable
@@ -19,21 +22,47 @@ on init
     symlink /storage/sdcard0 /mnt/sdcard
     symlink /storage/sdcard0 /storage/sdcard
     
+on early-fs
+    mkdir /dvp 0771 system system
+    mkdir /mpt 0775 system system    
+    
 on fs
     mount_all ./fstab.lgep769board
 # disable FUSE property value
     setprop ro.crypto.fuse_sdcard true
+    
+    wait /dev/block/platform/omap/omap_hsmmc.1/by-name/divxkey
+    exec /system/bin/e2fsck -p /dev/block/platform/omap/omap_hsmmc.1/by-name/divxkey
+    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/divxkey /dvp noatime nosuid nodev
 
-    ## This needs to run ASAP to set up the framebuffer before zygote kicks in
+    wait /dev/block/platform/omap/omap_hsmmc.1/by-name/persist
+    exec /system/bin/e2fsck -p /dev/block/platform/omap/omap_hsmmc.1/by-name/persist
+    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/persist /persist noatime nosuid nodev
+
+    wait /dev/block/platform/omap/omap_hsmmc.1/by-name/mlt
+    exec /system/bin/e2fsck -p /dev/block/platform/omap/omap_hsmmc.1/by-name/mlt
+    mount ext4 /dev/block/platform/omap/omap_hsmmc.1/by-name/mlt /mpt nosuid nodev barrier=1 noauto_da_alloc
+
+## This needs to run ASAP to set up the framebuffer before zygote kicks in
     start pvrsrvinit
 
 on post-fs-data
     mkdir /data/lgdrm 0770 lgdrm lgdrm_acc
     chown root system /data/dontpanic
     chmod 0775 /data/dontpanic
+    
+    chown system system /dvp
+    chmod 0771 /dvp
 
     chown system system /persist
     chmod 0771 /persist
+    
+    chown system system /mpt
+    chmod 0775 /mpt
+
+    touch /mpt/enable
+    chown system radio /mpt/enable
+    chmod 0660 /mpt/enable
 
     mkdir /data/misc/wifi 0775 wifi wifi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
@@ -48,6 +77,9 @@ on post-fs-data
     mkdir /persist/mhl 0770 radio radio
     chown system system /dev/hdcp
     chmod 0644 /dev/hdcp
+    
+# add symlink for HDCP key
+    symlink /factory/hdcp.keys /system/vendor/firmware/hdcp.keys
 
 # Hardware tunable perms
     chown root system /sys/devices/omapdss/display0/gamma_tuning
@@ -64,6 +96,11 @@ on post-fs-data
     # we will remap this as /mnt/sdcard with the sdcard fuse tool
     mkdir /data/media 0775 media_rw media_rw
     chown media_rw media_rw /data/media
+    
+# change permissions for S3D hardware
+    chown system system /sys/devices/platform/omapdss/display0/s3d_enable
+    chown system system /sys/devices/platform/omapdss/display1/s3d_enable
+    chown system system /sys/devices/platform/omapdss/display1/s3d_type
 
 # audio file access
     mkdir /data/audio 0770 media audio
@@ -192,15 +229,20 @@ on post-fs-data
 
 on boot
     chmod 0666 /dev/pvrsrvkm
+    
 # change permissions for Tiler driver
     chmod 0777 /dev/tiler
     chmod 0777 /dev/dmm
+    
 # Create Directory for Secure Storage
     mkdir /persist/smc 0770 system system
+    
 # debugfs
     mount debugfs /sys/kernel/debug /sys/kernel/debug
+    
 # touch
     chown system system /sys/devices/virtual/input/lge_touch/keyguard
+    
 # change permissions for ION driver
     chmod 0777 /dev/ion
 
@@ -289,6 +331,26 @@ on boot
     write /proc/sys/net/ipv6/conf/rment1/disable_ipv6 1
     write /proc/sys/net/ipv6/conf/rmnet2/disable_ipv6 1
 #LGE_CHANGE_E 20120720, hwansuk.kang@lge.com [data] Disable IPv6 for mobile network
+
+# Set DivXDRM Memory
+    mkdir /dvp/rysh 0770 system divxdrm
+    chown media divxdrm /dvp/rysh
+    chmod 0770 /dvp/rysh
+    mkdir /dvp/ooda 0770 system divxdrm
+    chown media divxdrm /dvp/ooda
+    chmod 0770 /dvp/ooda
+    mkdir /dvp/ssamu system divxdrm
+    chown media divxdrm /dvp/ssamu
+    chmod 0770 /dvp/ssamu
+# Set widevine drm keybox repository
+    mkdir /dvp/jjn 0770 drm system
+    chown system system /dvp
+    chmod 0771 /dvp
+
+service media /system/bin/mediaserver
+    user media
+    group system audio camera graphics inet net_bt net_bt_admin net_raw divxdrm
+    ioprio rt 4
 
 service pvrsrvinit /vendor/bin/pvrsrvinit
     disabled
