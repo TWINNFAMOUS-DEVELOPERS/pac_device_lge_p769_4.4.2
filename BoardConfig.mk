@@ -42,6 +42,10 @@ BOARD_HAS_NO_MISC_PARTITION := true
 
 TARGET_RECOVERY_FSTAB = device/lge/p769/fstab.u2
 RECOVERY_FSTAB_VERSION = 2
+DEVICE_RESOLUTION := 540x960
+BOARD_HAS_NO_SELECT_BUTTON := true
+TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
+BOARD_UMS_LUNFILE := "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun%d/file"
 
 TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
 
@@ -62,6 +66,7 @@ WIFI_DRIVER_FW_PATH_STA := "/system/etc/firmware/fw_bcmdhd_p2p.bin"
 WIFI_DRIVER_FW_PATH_P2P := "/system/etc/firmware/fw_bcmdhd_p2p.bin"
 WIFI_DRIVER_FW_PATH_AP := "/system/etc/firmware/fw_bcmdhd_apsta.bin"
 BOARD_LEGACY_NL80211_STA_EVENTS := true
+WIFI_BAND := 802_11_ABGN
 
 OMAP_ENHANCEMENT := true
 OMAP_ENHANCEMENT_CPCAM := true
