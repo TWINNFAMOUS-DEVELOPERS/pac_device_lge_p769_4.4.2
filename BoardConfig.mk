@@ -32,7 +32,7 @@ TARGET_KERNEL_SOURCE := kernel/lge/omap4-common
 # toolchain for kernel, must be in prebuilt\linux-x86\toolchain\
 TARGET_KERNEL_CUSTOM_TOOLCHAIN := linaro-4.7
 
-
+BOARD_HAS_NO_SELECT_BUTTON := true
 
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
@@ -45,7 +45,7 @@ RECOVERY_FSTAB_VERSION = 2
 DEVICE_RESOLUTION := 540x960
 BOARD_HAS_NO_SELECT_BUTTON := true
 TARGET_RECOVERY_PIXEL_FORMAT := "BGRA_8888"
-
+BOARD_UMS_LUNFILE := "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun%d/file"
 
 TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
 
@@ -114,10 +114,13 @@ TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storag
 BOARD_CUSTOM_GRAPHICS := ../../../device/lge/p769/recovery-gfx.c
 BOARD_CHARGER_ENABLE_SUSPEND := true
 
-#BOARD_SEPOLICY_DIRS := \
+# Charging
+COMMON_GLOBAL_CFLAGS += -DBOARD_CHARGING_CMDLINE_NAME='"chg"' -DBOARD_CHARGING_CMDLINE_VALUE='"68"'
+
+BOARD_SEPOLICY_DIRS := \
     device/lge/p769/selinux
 
-#BOARD_SEPOLICY_UNION := \
+BOARD_SEPOLICY_UNION := \
     file_contexts \
     pvrsrvinit.te \
     device.te \

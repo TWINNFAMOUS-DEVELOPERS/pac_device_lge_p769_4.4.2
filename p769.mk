@@ -1,4 +1,5 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 $(call inherit-product-if-exists, vendor/lge/p769/p769-vendor.mk)
 
@@ -7,7 +8,9 @@ $(call inherit-product, device/common/gps/gps_us.mk)
 DEVICE_PACKAGE_OVERLAYS += device/lge/p769/overlay
 
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
+$(call inherit-product, hardware/ti/omap4xxx/omap4.mk)
 
+#recovery
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/postrecoveryboot.sh:recovery/root/sbin/postrecoveryboot.sh
 
@@ -20,7 +23,9 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf \
+    $(LOCAL_PATH)/configs/wpa_supplicant_overlay.conf:system/etc/wifi/wpa_supplicant_overlay.conf \
     $(LOCAL_PATH)/configs/p2p_supplicant.conf:system/etc/wifi/p2p_supplicant.conf \
+    $(LOCAL_PATH)/configs/p2p_supplicant_overlay.conf:system/etc/wifi/p2p_supplicant_overlay.conf \
     $(LOCAL_PATH)/configs/hostapd.conf:system/etc/wifi/softap/hostapd.conf \
     $(LOCAL_PATH)/configs/touch_dev.idc:system/usr/idc/touch_dev.idc \
     $(LOCAL_PATH)/configs/touch_dev.kl:system/usr/keylayout/touch_dev.kl \
@@ -39,10 +44,6 @@ PRODUCT_COPY_FILES += \
 # RIL stuffs
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/ipc_channels.config:system/etc/ipc_channels.config
-
-# NFC stuffs
-#PRODUCT_COPY_FILES += \
-#    $(LOCAL_PATH)/configs/nfcee_access.xml:system/etc/nfcee_access.xml
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/bt_vendor.conf:system/etc/bluetooth/bt_vendor.conf
@@ -121,29 +122,12 @@ PRODUCT_PACKAGES += \
     libomap_mm_library_jni \
     libtimemmgr
 
-# NFC packages
-#PRODUCT_PACKAGES += \
-#    libnfc \
-#    libnfc_jni \
-#    Nfc \
-#    Tag
-
-#FRAMEWORKS_BASE_SUBDIRS += \
-#	$(addsuffix /java, omapmmlib )
-
-#FRAMEWORKS_BASE_SUBDIRS += \
-#	../../$(LOCAL_PATH)/framework-addons/
-
 PRODUCT_PACKAGES += \
     libskiahwdec \
     libskiahwenc
 
 PRODUCT_PACKAGES += \
     libstagefrighthw
-
-#copy firmware
-#PRODUCT_COPY_FILES += \
-#  system/bluetooth/data/main.conf:system/etc/bluetooth/main.conf
 
 # Charger mode
 PRODUCT_PACKAGES += \

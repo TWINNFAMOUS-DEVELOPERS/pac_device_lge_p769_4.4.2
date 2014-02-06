@@ -4,9 +4,6 @@ $(call inherit-product, vendor/cm/config/gsm.mk)
 # Inherit some common CM stuff.
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
-# This device has NFC
-#$(call inherit-product, vendor/cm/config/nfc_enhanced.mk)
-
 # Inherit device configuration
 $(call inherit-product, device/lge/p769/p769.mk)
 
@@ -23,5 +20,5 @@ PRODUCT_BUILD_PROP_OVERRIDES += PRODUCT_NAME=u2_open_eu BUILD_FINGERPRINT=lge/u2
 PRODUCT_DEVICE := p769
 
 # Enable Torch
-PRODUCT_PACKAGES += Torch WiFiDirectDemo LgeL9Parts
+PRODUCT_PACKAGES += Torch LgeL9Parts
 
