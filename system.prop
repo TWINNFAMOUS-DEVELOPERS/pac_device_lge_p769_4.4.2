@@ -52,3 +52,5 @@ persist.sys.usb.config=mtp,adb
 
 # launhcer will not be killed as much
 ro.HOME_APP_ADJ=1
+
+drm.service.enabled=true
