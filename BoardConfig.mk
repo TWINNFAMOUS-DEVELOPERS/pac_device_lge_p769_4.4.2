@@ -117,6 +117,7 @@ BOARD_CHARGER_ENABLE_SUSPEND := true
 # Charging
 COMMON_GLOBAL_CFLAGS += -DBOARD_CHARGING_CMDLINE_NAME='"chg"' -DBOARD_CHARGING_CMDLINE_VALUE='"68"'
 
+# Security Enhanced Linux
 BOARD_SEPOLICY_DIRS := \
     device/lge/p769/selinux
 
