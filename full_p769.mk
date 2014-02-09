@@ -1,4 +1,5 @@
-#
+# Copyright (C) 2013 TWINNFAMOUS Project
+# Copyright (C) 2013 OmniROM Project
 # Copyright (C) 2012 The CyanogenMod Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,8 +13,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
 
-PRODUCT_MAKEFILES := \
-        $(LOCAL_DIR)/full_p769.mk \
-        $(LOCAL_DIR)/omni_p769.mk 
+# Inherit from the common Open Source product configuration
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+
+# Inherit device configuration
+$(call inherit-product, device/lge/p769/p769.mk)
+
+# Discard inherited values and use our own instead.
+PRODUCT_NAME := full_p769
+PRODUCT_DEVICE := p769
+PRODUCT_MODEL := LG-P769
+PRODUCT_MANUFACTURER := LGE
